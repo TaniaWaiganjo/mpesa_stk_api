@@ -1,0 +1,40 @@
+language: python
+
+cache:
+  directories:
+    - pip_download_cache
+
+before_install:
+  - mkdir -p $PIP_DOWNLOAD_CACHE
+
+install:
+  - pip install tox
+  - pip install tox-travis
+  - pip install -e .
+
+script:
+  - tox -e $TOX_ENV
+
+env:
+  global:
+    - PIP_DOWNLOAD_CACHE="pip_download_cache"
+
+matrix:
+  include:
+    - python: "2.7"
+      env: TOX_ENV=py27-django1.8
+    - python: "2.7"
+      env: TOX_ENV=py27-django1.11
+    - python: "3.4"
+      env: TOX_ENV=py34-django1.11
+    - python: "3.7"
+      env: TOX_ENV=py37-django2.1
+      dist: xenial
+      sudo: true
+
+notifications:
+  email:
+    recipients:
+      - martinmogusu@gmail.com
+    on_success: always
+    on_failure: always
