@@ -23,6 +23,7 @@ from .models import CallbackData
 
 logger = logging.getLogger(__name__)
 
+
 @csrf_exempt
 def stk_push_callback(request):
     if request.method == 'POST':
@@ -37,6 +38,60 @@ def stk_push_callback(request):
             logger.error("Failed to decode JSON from callback data")
             return JsonResponse({'error': 'Invalid JSON data'}, status=400)
     return JsonResponse({'error': 'Invalid request method'}, status=400)
+
+## The one above assumes amount and phone number are defined in the py server
+
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+
+'''
+@csrf_exempt
+def stk_push_callback(request):
+    if request.method == 'POST':
+        try:
+            # Parse JSON payload
+            data = json.loads(request.body)
+            phone_number = data.get('LNM_PHONE_NUMBER')  # Map LNM_PHONE_NUMBER to phone_number
+            total_amount = data.get('total_amount')      # Extract total_amount
+            
+            # Map total_amount to amount
+            amount = total_amount
+
+            # Validate required fields
+            if not phone_number or not total_amount:
+                return JsonResponse({
+                    'status': 'error',
+                    'message': 'LNM_PHONE_NUMBER and total_amount are required'
+                }, status=400)
+
+            # Validate amount
+            try:
+                amount = int(amount)  # Ensure amount is an integer
+            except ValueError:
+                return JsonResponse({'status': 'error', 'message': 'Invalid total_amount'}, status=400)
+
+            # STK Push Details
+            account_reference = 'ABC001'
+            transaction_desc = 'STK Push Description'
+            callback_url = stk_push_callback_url
+
+            # Call STK Push API
+            r = cl.stk_push(phone_number, amount, account_reference, transaction_desc, callback_url)
+
+            return JsonResponse({
+                'status': 'success',
+                'message': r.response_description,
+                'phone_number': phone_number,
+                'amount': amount  # Return mapped amount for clarity
+            })
+        
+        except json.JSONDecodeError:
+            return JsonResponse({'status': 'error', 'message': 'Invalid JSON payload'}, status=400)
+
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=400)
+'''
 
 
 #def get_callback_data(request):

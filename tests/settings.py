@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_daraja',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -49,6 +50,29 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
+]
+
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+]
+
+CORS_ALLOW_METHODS = [
+    "GET", 
+    "POST", 
+    "PUT", 
+    "PATCH", 
+    "DELETE", 
+    "OPTIONS" 
+]
+
+CORS_ALLOW_HEADERS = [
+    "Content-Type", 
+    "Authorization", 
+    "X-Requested-With", 
+    "My-Custom-Header" 
 ]
 
 ROOT_URLCONF = 'tests.urls'
